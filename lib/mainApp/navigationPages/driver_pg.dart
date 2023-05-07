@@ -1,3 +1,4 @@
+import 'package:carpooling/models/user.dart';
 import 'package:flutter/material.dart';
 
 
@@ -11,8 +12,8 @@ class DriverPage extends StatefulWidget {
 
 class _DriverPageState extends State<DriverPage> {
 
-  final String userName = 'Ahmed';
-  bool verifiedUserID = false;
+  // final String userName = 'Ahmed';
+  var verifiedUserID = User.isIDVerified;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class _DriverPageState extends State<DriverPage> {
           Container(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: Text(
-              '$userName, tu voyages quelque part?',
+              '${User.firstname}, tu voyages quelque part?',
               style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'NunitoBold',
@@ -41,7 +42,7 @@ class _DriverPageState extends State<DriverPage> {
             ),
             child: TextButton(
               onPressed: () {
-                verifiedUserID == true ? print('User ID is verified') : Navigator.pushNamed(context, '/main/verifyID/info');
+                verifiedUserID == 0 ? Navigator.pushNamed(context, '/main/addCarpooling') : Navigator.pushNamed(context, '/main/verifyID/info');
               },
               child: const Text(
                 '+ Publier un covoiturage',

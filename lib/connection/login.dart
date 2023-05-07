@@ -1,5 +1,13 @@
+import 'dart:convert';
+
+import 'package:carpooling/mainApp/loading.dart';
+import 'package:carpooling/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../network_utils/api.dart';
+import 'home.dart';
 
 
 
@@ -15,6 +23,8 @@ class _LoginState extends State<Login> {
   final TextEditingController phoneInputController = TextEditingController();
   String initialCountry = 'TN';
   PhoneNumber number = PhoneNumber(isoCode: 'TN');
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +83,7 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: Form(
+                        key: _formKey,
                         child: InternationalPhoneNumberInput(
                           onInputChanged: (PhoneNumber number) {
                             print(number.phoneNumber);
@@ -96,6 +107,19 @@ class _LoginState extends State<Login> {
                           onSaved: (PhoneNumber number) {
                             print('On Saved: $number');
                           },
+                          validator: (phoneValue) {
+                            if (phoneValue == null || phoneValue.isEmpty) {
+                              return 'Champ obligatoire';
+                            }
+                            if( !RegExp(r"^[2459]").hasMatch(phoneValue)){
+                              return 'Nombre de téléphone non valide';
+                            }
+                            if(phoneValue.length != 10){
+                              return 'Nombre de téléphone doit avoir 8 chiffres';
+                            }
+                            return null;
+                          },
+
                         ),
                       )
                   ),
@@ -121,12 +145,12 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(25)
                     ),
                     child: TextButton(
-                      onPressed: () { 
-                        Navigator.pushNamed(context, '/main/home');
+                      onPressed: () {
+                        _login();
                       },
-                      child: const Text(
-                        'Connecter',
-                        style: TextStyle(
+                      child: Text(
+                        _isLoading == false ? 'Connecter' : 'En cours...',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'NunitoBold',
                           fontSize: 18.0
@@ -143,4 +167,44 @@ class _LoginState extends State<Login> {
       ) // ----------------- ** End main container ** -------------------- //
     );
   }
+
+
+  void _login() async{
+    final isValid = _formKey.currentState!.validate();
+    User user = User();
+    if(!isValid){
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    var data = {
+      'phoneNBR' : phoneInputController.text
+    };
+    var res = await Network().authData(data, '/login');
+    var body = json.decode(res.body);
+    if(body['success'] == true){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.setString('token', json.encode(body['token']));
+      localStorage.setString('user', json.encode(body['user']));
+      setState(() {
+        User.isAuth = true;
+      });
+      Navigator.pushReplacement(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => Loading()
+          )
+      );
+    }else{
+      print(body);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+
+  }
+
+
 }

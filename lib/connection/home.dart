@@ -1,3 +1,4 @@
+import 'package:carpooling/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ConnectionHome extends StatefulWidget {
@@ -91,18 +92,21 @@ class _ConnectionHomeState extends State<ConnectionHome> {
                                 BorderRadius.all(Radius.circular(25.0)),
                           )),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/login');
+                        User.isAuth == false ? Navigator.pushNamed(context, '/login') : Navigator.pushNamed(context, '/loading');
                       },
-                      child: const Text(
-                        "Se connecter",
-                        style: TextStyle(
+                      child: Text(
+                        User.isAuth == false ? "Se connecter" : "Acceuil",
+                        style: const TextStyle(
                             color: Color(0xF3F3F9F9),
                             fontSize: 12.0,
                             fontFamily: "NunitoBold",
-                            letterSpacing: 1.5),
-                      )),
+                            letterSpacing: 1.5
+                        ),
+                      )
+                  ),
                 ),
               ),
+              User.isAuth == false ?
               Expanded(
                 flex: 1,
                 child: Container(
@@ -127,9 +131,12 @@ class _ConnectionHomeState extends State<ConnectionHome> {
                             fontFamily: "NunitoBold",
                             letterSpacing: 1.5
                         ),
-                      )),
+                      )
+                  ),
                 ),
-              ),
+              )
+              :
+              Expanded(flex: 1, child: Container())
             ],
           ),
         ),

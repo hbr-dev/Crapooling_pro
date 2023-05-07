@@ -1,5 +1,9 @@
 import 'dart:developer';
 
+import 'package:carpooling/mainApp/carpooling/attachedWidgets/mycarpcard_widget.dart';
+import 'package:carpooling/mainApp/carpooling/attachedWidgets/myreservcard_widget.dart';
+import 'package:carpooling/models/carpooling.dart';
+import 'package:carpooling/models/demands.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intro_slider/intro_slider.dart';
@@ -145,102 +149,120 @@ class _CarpoolingPageState extends State<CarpoolingPage> {
   }
 
   Widget reservationView() {
-    List reservations = [];
-
+    List reservations = Demands.myDemands;
     return Container(
-        // color: Colors.cyan,
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-        child: SingleChildScrollView(
-            child: reservations.isEmpty
-                ? Center(
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
-                          child: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.hourglass_empty,
-                                size: 45,
-                              )),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 2.5),
-                          child: const Text(
-                            "Pas des réservations en cours",
-                            style: TextStyle(
-                                fontFamily: 'NunitoMedium',
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 2.5, 0, 5),
-                          child: const Text(
-                              "Tes futures réservations apparaîtront ici.",
-                              style: TextStyle(
-                                  fontFamily: 'NunitoRegular',
-                                  fontSize: 16.0,
-                                  color: Colors.black54,
-                                  letterSpacing: 1.5)),
-                        )
-                      ],
+      // color: Colors.cyan,
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+      child: SingleChildScrollView(
+          child: reservations.isEmpty
+            ? Center(
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.hourglass_empty,
+                            size: 45,
+                          )),
                     ),
-                  )
-                : Container()
-        )
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 2.5),
+                      child: const Text(
+                        "Pas des réservations en cours",
+                        style: TextStyle(
+                            fontFamily: 'NunitoMedium',
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 2.5, 0, 5),
+                      child: const Text(
+                          "Tes futures réservations apparaîtront ici.",
+                          style: TextStyle(
+                              fontFamily: 'NunitoRegular',
+                              fontSize: 16.0,
+                              color: Colors.black54,
+                              letterSpacing: 1.5)),
+                    )
+                  ],
+                ),
+              )
+            : Container(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for(var i=0; i<reservations.length; i++)
+                    MyReservationCard(reservations[i])
+                ],
+              ),
+            ),
+          ),
+      )
     );
   }
 
 
   Widget offersView() {
-    List reservations = [];
-
+    List myOffers = Carpooling().myCarpoolings();
     return Container(
       // color: Colors.cyan,
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
         child: SingleChildScrollView(
-            child: reservations.isEmpty
-                ? Center(
+          child: myOffers.isEmpty
+          ? Center(
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+                  child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.hourglass_empty,
+                        size: 45,
+                      )),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 2.5),
+                  child: const Text(
+                    "Pas d'offres en cours",
+                    style: TextStyle(
+                        fontFamily: 'NunitoMedium',
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 2.5, 0, 5),
+                  child: const Text(
+                    "Tes offres publiées s'afficheront ici.",
+                    style: TextStyle(
+                      fontFamily: 'NunitoRegular',
+                      fontSize: 16.0,
+                      color: Colors.black54,
+                      letterSpacing: 1.5
+                    )
+                  ),
+                )
+              ],
+            ),
+          )
+          : Container(
+            child: SingleChildScrollView(
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
-                    child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.hourglass_empty,
-                          size: 45,
-                        )),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 2.5),
-                    child: const Text(
-                      "Pas d'offres en cours",
-                      style: TextStyle(
-                          fontFamily: 'NunitoMedium',
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 2.5, 0, 5),
-                    child: const Text(
-                        "Tes offres publiées s'afficheront ici.",
-                        style: TextStyle(
-                            fontFamily: 'NunitoRegular',
-                            fontSize: 16.0,
-                            color: Colors.black54,
-                            letterSpacing: 1.5)),
-                  )
+                  for(var i=0; i<myOffers.length; i++)
+                    MyCarpoolingCard(myOffers[i])
                 ],
               ),
-            )
-                : Container()
+            ),
+          )
         )
     );
   }

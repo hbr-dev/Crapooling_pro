@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:carpooling/mainApp/navigationPages/carpooling_pg.dart';
 import 'package:carpooling/mainApp/navigationPages/driver_pg.dart';
 import 'package:carpooling/mainApp/navigationPages/passenger_pg.dart';
 import 'package:carpooling/mainApp/navigationPages/wallet_pg.dart';
+import 'package:carpooling/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../connection/login.dart';
+import '../network_utils/api.dart';
 
 
 class MainHome extends StatefulWidget {
@@ -15,12 +22,7 @@ class MainHome extends StatefulWidget {
 class _MainHomeState extends State<MainHome> {
 
   int pageIndex = 0;
-  final navigationItems = [
-    const PassengerPage(),
-    const DriverPage(),
-    const CarpoolingPage(),
-    const WalletPage()
-  ];
+  final navigationItems = [const PassengerPage(), const DriverPage(), const CarpoolingPage(), const WalletPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +49,13 @@ class _MainHomeState extends State<MainHome> {
                   width: 45,
                   margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                   decoration: BoxDecoration(
-                    color: Colors.lightBlue[100],
-                    borderRadius: BorderRadius.circular(25),
+                    color: const Color(0xFF01AB8E).withAlpha(50),
+                    shape: BoxShape.circle
                   ),
                   child: IconButton(
-                    onPressed: () {  },
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/main/profile');
+                    },
                     icon: const Icon(
                       Icons.person,
                       color: Color(0xFF01AB8E),
@@ -125,7 +129,7 @@ class _MainHomeState extends State<MainHome> {
                   style: BorderStyle.solid,
                   width: 1
               )
-            ) ,
+            ),
         ),
         // ##### Row : the main row child of the btm menu
         child: Row(

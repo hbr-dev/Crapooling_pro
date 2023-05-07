@@ -9,6 +9,7 @@ import 'package:select_form_field/select_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../network_utils/api.dart';
+import 'login.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -35,10 +36,10 @@ class _SignUpState extends State<SignUp> {
   PhoneNumber number = PhoneNumber(isoCode: 'TN');
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _firstName = TextEditingController();
-  TextEditingController _lastName = TextEditingController();
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _lastName = TextEditingController();
   String _gndr = 'man';
-  TextEditingController _email = TextEditingController();
+  final TextEditingController _email = TextEditingController();
 
   // var firstName = '';
   // var lastName = '';
@@ -446,11 +447,16 @@ class _SignUpState extends State<SignUp> {
     var res = await Network().authData(data, '/register');
     var body = json.decode(res.body);
     print('Body of res : $body');
-    if(body['success']){
+    if(body['success'] == true){
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       localStorage.setString('token', json.encode(body['token']));
       localStorage.setString('user', json.encode(body['user']));
-      print('User sucessfully added');
+      Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => Login()
+        )
+      );
     }
     else{
       print('Body of res : $body');

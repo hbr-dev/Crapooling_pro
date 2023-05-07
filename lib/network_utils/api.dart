@@ -10,7 +10,6 @@ class Network {
   _getToken() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     token = jsonDecode(localStorage.getString('token').toString());
-    print(token);
   }
 
   authData(data, apiUrl) async {
@@ -23,6 +22,24 @@ class Network {
     var fullUrl = _url + apiUrl;
     await _getToken();
     return await http.get(Uri.parse(fullUrl), headers: _setHeaders());
+  }
+
+  saveData(data, apiUrl) async {
+    var fullUrl = _url + apiUrl;
+    await _getToken();
+    return await http.post(Uri.parse(fullUrl), body: jsonEncode(data), headers: _setHeaders());
+  }
+
+  updateData(data, apiUrl) async {
+    var fullUrl = _url + apiUrl;
+    await _getToken();
+    return await http.patch(Uri.parse(fullUrl), body: jsonEncode(data), headers: _setHeaders());
+  }
+
+  logout(apiUrl) async {
+    var fullUrl = _url + apiUrl;
+    await _getToken();
+    return await http.post(Uri.parse(fullUrl), headers: _setHeaders());
   }
 
   _setHeaders() => {
